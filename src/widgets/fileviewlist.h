@@ -40,6 +40,7 @@ signals:
   void EditTags(const QList<QUrl>& urls);
   void Back();
   void Forward();
+  void SortBy();
 
  protected:
   void contextMenuEvent(QContextMenuEvent* e);
@@ -54,6 +55,7 @@ signals:
   void DeleteSlot();
   void EditTagsSlot();
   void ShowInBrowser();
+  void SortBySlot();
 
   QStringList FilenamesFromSelection() const;
   QList<QUrl> UrlListFromSelection() const;
@@ -61,6 +63,7 @@ signals:
 
  private:
   QMenu* menu_;
+  QMenu* submenu_sort_by_;
   QItemSelection menu_selection_;
 };
 

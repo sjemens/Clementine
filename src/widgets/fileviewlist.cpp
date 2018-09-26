@@ -26,7 +26,7 @@
 #include <QtDebug>
 
 FileViewList::FileViewList(QWidget* parent)
-    : QListView(parent), menu_(new QMenu(this)) {
+    : QListView(parent), menu_(new QMenu(this)), submenu_sort_by_(new QMenu(this)) {
   menu_->addAction(IconLoader::Load("media-playback-start", IconLoader::Base),
                    tr("Append to current playlist"), this,
                    SLOT(AddToPlaylistSlot()));
@@ -35,6 +35,15 @@ FileViewList::FileViewList(QWidget* parent)
   menu_->addAction(IconLoader::Load("document-new", IconLoader::Base), 
                    tr("Open in new playlist"), this, 
                    SLOT(OpenInNewPlaylistSlot()));
+  menu_->addSeparator();
+  submenu_sort_by_->setTitle(tr("Sort By"));
+  submenu_sort_by_->addAction(tr("Name"), this, SLOT(SortBySlot()));
+  submenu_sort_by_->addAction(tr("Date"), this, SLOT(SortBySlot()));
+  submenu_sort_by_->addAction(tr("Size"), this, SLOT(SortBySlot()));
+  submenu_sort_by_->addSeparator();
+  QAction* actionReverse = submenu_sort_by_->addAction(tr("Reverse"), this, SLOT(SortBySlot()));
+  actionReverse->setCheckable(true);
+  menu_->addMenu(submenu_sort_by_);
   menu_->addSeparator();
   menu_->addAction(IconLoader::Load("edit-copy", IconLoader::Base), 
                    tr("Copy to library..."), this, SLOT(CopyToLibrarySlot()));
@@ -115,6 +124,11 @@ void FileViewList::OpenInNewPlaylistSlot() {
   emit AddToPlaylist(data);
 }
 
+void FileViewList::SortBySlot()
+{
+  emit SortBy();
+}
+
 void FileViewList::CopyToLibrarySlot() {
   emit CopyToLibrary(UrlListFromSelection());
 }
@@ -159,5 +173,5 @@ void FileViewList::mousePressEvent(QMouseEvent* e) {
 }
 
 void FileViewList::ShowInBrowser() {
-  Utilities::OpenInFileBrowser(UrlListFromSelection());
+    Utilities::OpenInFileBrowser(UrlListFromSelection());
 }
